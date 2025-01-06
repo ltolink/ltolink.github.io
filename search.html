@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Search Box</title>
+    <link rel="icon" href="img/favicon.png" type="image/png">
+    <style>
+        /* 全局样式 */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff; /* 白色背景 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 系统默认字体栈 */
+            color: #333;
+            position: relative; /* 为右上角按钮定位提供参考 */
+        }
+
+        /* 右上角按钮 */
+        #topRightButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #topRightButton:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px); /* 按钮悬停时轻微上移 */
+        }
+
+        #topRightButton:active {
+            transform: translateY(0); /* 按钮点击时恢复原位 */
+        }
+
+        /* 搜索容器 */
+        .search-container {
+            background-color: #ffffff; /* 白色背景 */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* 更柔和的阴影 */
+            width: 600px; /* 加长搜索容器的宽度 */
+            text-align: center;
+            border: 1px solid #e0e0e0; /* 添加边框 */
+        }
+
+        /* 标题 */
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* 图标和文字之间的间距 */
+            position: relative; /* 为动画效果提供定位 */
+            overflow: hidden; /* 隐藏超出部分 */
+        }
+
+        /* 图标和文字容器 */
+        #titleContent {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* 图标样式 */
+        #searchIcon {
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            flex-shrink: 0; /* 防止图标被压缩 */
+        }
+
+        /* 文字样式 */
+        #searchText {
+            display: inline-block;
+        }
+
+        /* 切换动画 */
+        @keyframes slideOut {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* 输入框 */
+        input[type="text"] {
+            padding: 12px 15px;
+            width: calc(100% - 30px); /* 输入框宽度占满容器 */
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+        }
+
+        /* 按钮 */
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px); /* 按钮悬停时轻微上移 */
+        }
+
+        button:active {
+            transform: translateY(0); /* 按钮点击时恢复原位 */
+        }
+
+        /* 搜索选项 */
+        .search-options {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* 选项之间的间距 */
+            justify-content: center;
+        }
+
+        .search-options label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        input[type="radio"] {
+            margin-right: 8px;
+            accent-color: #007BFF; /* 自定义单选按钮颜色 */
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .search-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            input[type="text"] {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+
+            .search-options label {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 右上角按钮 -->
+    <button id="topRightButton">设置</button>
+
+    <div class="search-container">
+        <h1 id="searchTitle">
+            <div id="titleContent">
+                <span id="searchIcon"></span>
+                <span id="searchText">Search</span>
+            </div>
+        </h1>
+        <form id="searchForm">
+            <input type="text" name="searchInput" id="searchInput" placeholder="Enter your search term...">
+            <button type="submit" id="searchButton">Search</button>
+        </form>
+        <div class="search-options">
+            <label><input type="radio" name="searchEngine" value="baidu" checked>百度</label>
+            <label><input type="radio" name="searchEngine" value="bing">必应</label>
+            <label><input type="radio" name="searchEngine" value="so">360搜索</label>
+            <label><input type="radio" name="searchEngine" value="sogou">搜狗</label>
+            <label><input type="radio" name="searchEngine" value="douyin">抖音</label>
+            <label><input type="radio" name="searchEngine" value="bilibili">哔哩哔哩</label>
+            <label><input type="radio" name="searchEngine" value="github">GitHub</label>
+        </div>
+    </div>
+    <script>
+        // 获取页面元素
+        const searchIcon = document.getElementById("searchIcon");
+        const searchText = document.getElementById("searchText");
+        const titleContent = document.getElementById("titleContent");
+        const searchForm = document.getElementById("searchForm");
+        const searchInput = document.getElementById("searchInput");
+        const searchOptions = document.querySelectorAll('input[name="searchEngine"]');
+        const topRightButton = document.getElementById("topRightButton");
+
+        // 定义搜索引擎名称和图标映射
+        const engineData = {
+            baidu: { name: "百度", icon: "https://www.baidu.com/favicon.ico" },
+            bing: { name: "必应", icon: "https://www.bing.com/favicon.ico" },
+            so: { name: "360搜索", icon: "https://www.so.com/favicon.ico" },
+            sogou: { name: "搜狗", icon: "https://www.sogou.com/favicon.ico" },
+            douyin: { name: "抖音", icon: "https://www.douyin.com/favicon.ico" },
+            bilibili: { name: "哔哩哔哩", icon: "https://www.bilibili.com/favicon.ico" },
+            github: { name: "GitHub", icon: "https://github.com/favicon.ico" }
+        };
+
+        // 预加载所有图标
+        function preloadIcons() {
+            Object.values(engineData).forEach(engine => {
+                const img = new Image();
+                img.src = engine.icon;
+            });
+        }
+
+        // 页面加载时预加载图标
+        window.addEventListener("load", preloadIcons);
+
+        // 监听搜索引擎选项的变化
+        searchOptions.forEach(option => {
+            option.addEventListener("change", function() {
+                const selectedEngine = this.value;
+                const engine = engineData[selectedEngine];
+
+                // 添加切换动画
+                titleContent.style.animation = "slideOut 0.3s forwards";
+                setTimeout(() => {
+                    searchIcon.style.backgroundImage = `url('${engine.icon}')`; // 更新图标
+                    searchText.textContent = engine.name; // 更新名称
+                    titleContent.style.animation = "slideIn 0.3s forwards"; // 添加进入动画
+                }, 300); // 等待 0.3 秒后更新内容并播放进入动画
+            });
+        });
+
+        // 初始化默认图标和名称
+        const defaultEngine = document.querySelector('input[name="searchEngine"]:checked').value;
+        searchIcon.style.backgroundImage = `url('${engineData[defaultEngine].icon}')`;
+        searchText.textContent = engineData[defaultEngine].name;
+
+        // 监听表单提交事件
+        searchForm.addEventListener("submit", function(event) {
+            event.preventDefault(); // 阻止表单提交的默认行为
+            const searchValue = searchInput.value;
+            const selectedEngine = document.querySelector('input[name="searchEngine"]:checked').value;
+            let searchUrl;
+
+            // 根据选择的搜索引擎生成搜索URL
+            switch (selectedEngine) {
+                case "baidu":
+                    searchUrl = "https://www.baidu.com/s?wd=" + encodeURIComponent(searchValue);
+                    break;
+                case "bing":
+                    searchUrl = "https://www.bing.com/search?q=" + encodeURIComponent(searchValue);
+                    break;
+                case "douyin":
+                    searchUrl = "https://www.douyin.com/search/" + encodeURIComponent(searchValue);
+                    break;
+                case "so":
+                    searchUrl = "https://www.so.com/s?q=" + encodeURIComponent(searchValue);
+                    break;
+                case "sogou":
+                    searchUrl = "https://www.sogou.com/web?query=" + encodeURIComponent(searchValue);
+                    break;
+                case "bilibili":
+                    searchUrl = "https://search.bilibili.com/all?keyword=" + encodeURIComponent(searchValue);
+                    break;
+                case "github":
+                    searchUrl = "https://github.com/search?q=" + encodeURIComponent(searchValue);
+                    break;
+                default:
+                    searchUrl = "#";
+            }
+
+            // 在新标签页中打开搜索结果
+            window.open(searchUrl, "_blank");
+        });
+
+        // 右上角按钮点击事件
+        topRightButton.addEventListener("click", function() {
+            alert("设置按钮被点击了！");
+            // 在这里添加按钮的功能逻辑
+        });
+    </script>
+</body>
+</html>

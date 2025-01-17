@@ -322,6 +322,12 @@
             alert("设置按钮被点击了！");
             // 在这里添加按钮的功能逻辑
         });
+
+        // 右键点击输入框时清空输入框
+        searchInput.addEventListener("contextmenu", function(event) {
+            event.preventDefault(); // 阻止默认的右键菜单
+            searchInput.value = ""; // 清空输入框
+        });
     </script>
 </body>
 </html>

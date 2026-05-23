@@ -7,7 +7,8 @@ fi
 
 # Change termux apt source to tsinghua mirror
 echo "deb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main" > $PREFIX/etc/apt/sources.list
-apt update
+pkg update
+pkg install termux-auth openssh
 
 # Change motd
 MOTD=/data/data/com.termux/files/usr/etc/motd

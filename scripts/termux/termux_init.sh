@@ -38,3 +38,7 @@ echo "Please change password:"
 passwd
 
 clear
+
+cat $MOTD
+bash $BASHRC
+
